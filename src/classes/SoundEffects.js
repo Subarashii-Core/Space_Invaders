@@ -46,10 +46,10 @@ class SoundEffects{
     }
 
     adjustVolumes(){
-        this.hitSound.forEach(sound => sound.volume = 0.2)
-        this.shootSound.forEach(sound => sound.volume = 0.5)
-        this.explosionSound.volume = 0.2
-        this.nextLevelSound.volume = 0.4
+        this.hitSound.forEach(sound => sound.volume = 0.05)
+        this.shootSound.forEach(sound => sound.volume = 0.1)
+        this.explosionSound.volume = 0.05
+        this.nextLevelSound.volume = 0.05
     }
 }
 

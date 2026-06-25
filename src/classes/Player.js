@@ -1,4 +1,4 @@
-import { INITIAL_FRAMES, PATH_ENGINE_IMAGE, PATH_ENGINE_SPRITES, PATH_SPACESHIP_IMAGE } from "../utils/constants.js";
+import { INITIAL_FRAMES, PATH_BLACKBIRD_IMAGE, PATH_ENGINE_IMAGE, PATH_ENGINE_SPRITES, PATH_ENTERPRISE_IMAGE, PATH_FALCON_IMAGE, PATH_SPACESHIP_IMAGE } from "../utils/constants.js";
 import Projectile from "./projetcile.js";
 
 class Player{
@@ -6,12 +6,21 @@ class Player{
         this.alive = true;
         this.width = 48 * 2;
         this.height = 48 * 2;
-        this.velocity = 3;
+        // this.width = 772 / 10;
+        // this.height = 1389 / 10;
+        // this.width = 778 / 10;
+        // this.height = 1112 / 11;
+        // this.width = 548 / 10;
+        // this.height = 1152 /10;
+        this.velocity = 300;
 
         this.position = {
             x: canvasWidth/2 - this.width/2,
             y: canvasHeight - this.height - 30,
         };
+        // this.image = this.getImage(PATH_ENTERPRISE_IMAGE);
+        // this.image = this.getImage(PATH_FALCON_IMAGE);
+        // this.image = this.getImage(PATH_BLACKBIRD_IMAGE);
         this.image = this.getImage(PATH_SPACESHIP_IMAGE);
         this.engineImage = this.getImage(PATH_ENGINE_IMAGE);
         this.engineSprites = this.getImage(PATH_ENGINE_SPRITES);
@@ -26,12 +35,12 @@ class Player{
         return image;
     }
 
-    moveLeft(){
-        this.position.x -= this.velocity
+    moveLeft(deltaTime){
+        this.position.x -= this.velocity * deltaTime / 1000
     }
 
-    moveRight(){
-        this.position.x += this.velocity
+    moveRight(deltaTime){
+        this.position.x += this.velocity * deltaTime / 1000
     }
 
     draw(ctx) {
@@ -80,7 +89,7 @@ class Player{
             x: this.position.x + this.width /2 -1,
             y: this.position.y + 4,
             },
-            -5
+            -500
         );
 
         projectiles.push(p);

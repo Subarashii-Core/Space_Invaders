@@ -5,7 +5,9 @@ import Particle from "./classes/Particle.js";
 import Player from "./classes/player.js";
 import Projectile from "./classes/projetcile.js";
 import SoundEffects from "./classes/SoundEffects.js";
-import { gameState } from "./utils/constants.js";
+import Cheats from "./classes/Cheats.js";
+import Stars, {createStar} from "./classes/stars.js";
+import { gameState, STAR_COUNT } from "./utils/constants.js";
 
 const soundEffects = new SoundEffects()
 
@@ -17,6 +19,7 @@ const levelElement = document.querySelector(".level>span")
 const highElement = document.querySelector(".high>span")
 const buttonPlay = document.querySelector(".button-play")
 const buttonRestart = document.querySelector(".button-restart")
+const fpsCounter = document.querySelector("#fps")
 
 gameOverScreen.remove();
 
@@ -49,6 +52,11 @@ const playerProjectiles = [];
 const invaderProjectiles = [];
 const particles = [];
 const obstacles = [];
+const stars = []; 
+
+for(let i=0; i < 100; i++){
+    stars.push(createStar(canvas.width));
+}
 
 const initObstacles = () => {
     const x = canvas.width/2 - 50
@@ -64,6 +72,12 @@ const initObstacles = () => {
 }
 
 initObstacles();
+
+const cheats = new Cheats();
+
+window.addEventListener("keydown", (event) => {
+    cheats.handleInput(event.key);
+})
 
 const keys = {
     left: false,
@@ -86,19 +100,25 @@ const drawObstacles = () => {
     obstacles.forEach((obstacle) => obstacle.draw(ctx))
 }
 
-const drawProjectiles = () => {
+const drawProjectiles = (deltaTime) => {
     const projectiles = [...playerProjectiles, ...invaderProjectiles]
     
     projectiles.forEach((Projectile) => {
         Projectile.draw(ctx);
-        Projectile.update();
+        Projectile.update(deltaTime);
     })
 }
 
-const drawParticles = () => {
+const drawStars = (deltaTime) =>{
+    stars.forEach(star => {
+        star.update(ctx, canvas.height, deltaTime);
+    })
+}
+
+const drawParticles = (deltaTime) => {
     particles.forEach((particle) => {
         particle.draw(ctx);
-        particle.update();
+        particle.update(deltaTime);
     })
 }
 
@@ -126,8 +146,8 @@ const createExplosion = (position, size, color) => {
                 y: position.y,
             },
             {
-                x: Math.random() - 0.5 * 1.5,
-                y: Math.random() - 0.5 * 1.5,
+                x: (Math.random() - 0.5) * 300,
+                y: (Math.random() - 0.5) * 300,
             },
             2,
             color
@@ -189,7 +209,7 @@ const spawnGrid = () => {
         soundEffects.playNextLevelSound()
 
         grid.rows = Math.round(Math.random() * 9 + 1)
-        grid.cols = Math.round(Math.random() * 9 + 1)
+        grid.cols = Math.round(Math.random() * 6 + 1)
         grid.restart();
 
         gameData.level += 1;
@@ -206,19 +226,50 @@ const gameOver = () => {
     document.body.append(gameOverScreen)
 }
 
-const gameLoop = () => {
+let lastTime = performance.now()
+let fps = 0
+let frameCount = 0
+let lastFpsUpdate = 0
+
+const gameLoop = (currentTime) => {
+    frameCount ++;
+
+    if(currentTime - lastFpsUpdate >= 250){
+        fps = Math.round(frameCount * 1000 / (currentTime - lastFpsUpdate))
+
+        frameCount = 0
+        lastFpsUpdate = currentTime
+
+        fpsCounter.textContent = `FPS: ${fps}`
+    }
+
+    const deltaTime = currentTime - lastTime
+    lastTime = currentTime
+
+    console.log(deltaTime)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if(currentState === gameState.START){
+        player.alive = false;
+        drawStars(deltaTime);
+        drawObstacles();
+        grid.draw(ctx);
+        grid.update(player.alive);
+        player.draw(ctx);
+    }
+
     if(currentState == gameState.PLAYING){
+        player.alive = true;
         showGameData();
         spawnGrid();
 
         drawObstacles();
-        drawParticles();
-        drawProjectiles();
+        drawParticles(deltaTime);
+        drawProjectiles(deltaTime);
+        drawStars(deltaTime);
 
-        clearProjectiles();
-        clearParticles();
+        clearProjectiles(deltaTime);
+        clearParticles(deltaTime);
 
         checkShootInvaders();
         checkShootPlayer();
@@ -241,11 +292,12 @@ const gameLoop = () => {
         }
 
         if(keys.left && player.position.x >= 0){
-            player.moveLeft();
+            player.moveLeft(deltaTime);
             ctx.rotate(-0.15)
         }
+        
         if(keys.right && player.position.x <= canvas.width - player.width){
-            player.moveRight()
+            player.moveRight(deltaTime)
             ctx.rotate(+0.15)
         }
 
@@ -261,9 +313,10 @@ const gameLoop = () => {
 
     if(currentState == gameState.GAME_OVER){
         checkShootObstacles();
-        drawParticles();
+        drawParticles(deltaTime);
         drawObstacles();
-        drawProjectiles()
+        drawProjectiles(deltaTime)
+        drawStars(deltaTime);
 
         clearProjectiles();
         clearParticles();
@@ -274,6 +327,14 @@ const gameLoop = () => {
 
     requestAnimationFrame(gameLoop);
 };
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas)
 
 addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
@@ -317,11 +378,11 @@ buttonRestart.addEventListener("click", () => {
     grid.invaderVelocity = 1;
 
     gameData.score = 0
-    gameData.level = 1
+    gameData.level = 0
 
     invaderProjectiles.length = 0;
 
     gameOverScreen.remove()
 })
 
-gameLoop();
+requestAnimationFrame(gameLoop);

@@ -25,10 +25,11 @@ class Particle{
         ctx.restore();
     }
 
-    update(){
-        this.position.x += this.velocity.x;
-        this.position.y +=this.velocity.y;
-        this.opacity = this.opacity - 0.005 <= 0 ? 0 : this.opacity - 0.005
+    update(deltaTime){
+        this.position.x += this.velocity.x * deltaTime /1000;
+        this.position.y +=this.velocity.y * deltaTime /1000;
+        this.opacity -= 1.5 * deltaTime /1000
+        if(this.opacity < 0)this.opacity = 0 
     }
 }
 

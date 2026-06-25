@@ -1,4 +1,4 @@
-import { PATH_INVADER_IMAGE } from "../utils/constants.js";
+import { PATH_COGS_IMAGE, PATH_INVADER_IMAGE } from "../utils/constants.js";
 import Projectile from "./projetcile.js";
 
 class Invader{
@@ -48,7 +48,7 @@ class Invader{
             x: this.position.x + this.width /2 -1,
             y: this.position.y + this.height,
             },
-            2
+            400
         );
 
         projectiles.push(p);
@@ -61,7 +61,7 @@ class Invader{
             projectile.position.y >= this.position.y &&
             projectile.position.y <= this.position.y + this.height
         )
-    }
+    } 
 }
 
 export default Invader;

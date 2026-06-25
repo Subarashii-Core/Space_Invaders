@@ -50,7 +50,7 @@ class Grid{
         this.invaders.forEach((invader) =>{
             if(this.moveDown){
                 invader.moveDown();
-                invader.incrementVelocity(0.1)
+                invader.incrementVelocity(0.2)
                 this.invaderVelocity = invader.velocity;
             }
 

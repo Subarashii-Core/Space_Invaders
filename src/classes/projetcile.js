@@ -11,8 +11,8 @@ class Projectile{
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
-    update(){
-        this.position.y += this.velocity;
+    update(deltaTime){
+        this.position.y += this.velocity * deltaTime / 1000;
     }
 }
 
