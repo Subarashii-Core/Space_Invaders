@@ -246,7 +246,7 @@ const gameLoop = (currentTime) => {
     const deltaTime = currentTime - lastTime
     lastTime = currentTime
 
-    console.log(deltaTime)
+    //console.log(deltaTime)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if(currentState === gameState.START){
