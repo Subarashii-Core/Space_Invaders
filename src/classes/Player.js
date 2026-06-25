@@ -12,7 +12,7 @@ class Player{
         // this.height = 1112 / 11;
         // this.width = 548 / 10;
         // this.height = 1152 /10;
-        this.velocity = 300;
+        this.velocity = 450;
 
         this.position = {
             x: canvasWidth/2 - this.width/2,
@@ -89,7 +89,7 @@ class Player{
             x: this.position.x + this.width /2 -1,
             y: this.position.y + 4,
             },
-            -500
+            -600
         );
 
         projectiles.push(p);

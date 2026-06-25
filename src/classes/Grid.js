@@ -36,7 +36,7 @@ class Grid{
     }
 
     //ctrl + K + C para comentar varias linhas e Ctrl + K + U para reverter
-    update(playerStatus){
+    update(playerStatus, deltaTime){
         if (this.rightEdge()){
             this.direction = "left"
             this.moveDown = true;
@@ -50,12 +50,12 @@ class Grid{
         this.invaders.forEach((invader) =>{
             if(this.moveDown){
                 invader.moveDown();
-                invader.incrementVelocity(0.2)
+                invader.incrementVelocity(20)
                 this.invaderVelocity = invader.velocity;
             }
 
-            if(this.direction === "right") invader.moveRight()
-            if(this.direction === "left") invader.moveLeft()
+            if(this.direction === "right") invader.moveRight(deltaTime)
+            if(this.direction === "left") invader.moveLeft(deltaTime)
         });
 
         this.moveDown = false;

@@ -5,7 +5,7 @@ class Invader{
     constructor(position, velocity) {
         this.width = 50 * 0.8;
         this.height = 37 * 0.8;
-        this.velocity = 1;
+        this.velocity = 200;
         this.position = position
 
         this.image = this.getImage(PATH_INVADER_IMAGE);
@@ -17,12 +17,12 @@ class Invader{
         return image;
     }
 
-    moveLeft(){
-        this.position.x -= this.velocity
+    moveLeft(deltaTime){
+        this.position.x -= this.velocity * deltaTime / 1000
     }
 
-    moveRight(){
-        this.position.x += this.velocity
+    moveRight(deltaTime){
+        this.position.x += this.velocity * deltaTime / 1000
     }
 
     moveDown(){
@@ -48,7 +48,7 @@ class Invader{
             x: this.position.x + this.width /2 -1,
             y: this.position.y + this.height,
             },
-            400
+            450
         );
 
         projectiles.push(p);

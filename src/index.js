@@ -254,7 +254,7 @@ const gameLoop = (currentTime) => {
         drawStars(deltaTime);
         drawObstacles();
         grid.draw(ctx);
-        grid.update(player.alive);
+        grid.update(player.alive, deltaTime);
         player.draw(ctx);
     }
 
@@ -276,7 +276,7 @@ const gameLoop = (currentTime) => {
         checkShootObstacles();
 
         grid.draw(ctx);
-        grid.update(player.alive);
+        grid.update(player.alive, deltaTime);
 
         ctx.save();
 
@@ -322,7 +322,7 @@ const gameLoop = (currentTime) => {
         clearParticles();
 
         grid.draw(ctx);
-        grid.update(player.alive);
+        grid.update(player.alive, deltaTime);
     }
 
     requestAnimationFrame(gameLoop);
